@@ -49,9 +49,16 @@ func main() {
 			log.Fatal(err)
 		}
 
+		doc.Find("img").Each(func(i int, s *goquery.Selection) {
+			data_src, _ := s.Attr("data-src")
+			s.SetAttr("src", data_src)
+		})
+
 		title, _ := doc.Find("#activity-name").First().Html()
-		author, _ := doc.Find(".rich_media_meta.rich_media_meta_text").First().Html()
+		author, _ := doc.Find("#js_name").First().Html()
 		html, _ := doc.Find("#js_content").First().Html()
+
+		log.Printf(html)
 
 		if client, err := telegraph.Create(author, author, ""); err == nil {
 			log.Printf("> Created client: %#+v", client)
@@ -64,16 +71,9 @@ func main() {
 			}
 
 			// CreatePage
-			if page, err := client.CreatePageWithHTML(title, author, "", html, true); err == nil {
+			if page, err := client.CreatePageWithHTML(title, author, "", html, false); err == nil {
 				log.Printf("> CreatePage result: %#+v", page)
 				log.Printf("> Created page url: %s", page.URL)
-
-				// GetPage
-				if page, err := client.GetPage(page.Path, true); err == nil {
-					log.Printf("> GetPage result: %#+v", page)
-				} else {
-					log.Printf("* GetPage error: %s", err)
-				}
 
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, page.URL)
 
