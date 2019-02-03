@@ -1,7 +1,10 @@
 package main
 
 import (
+	"crypto/sha512"
+	"fmt"
 	"net/http"
+	"os/exec"
 
 	"github.com/PuerkitoBio/goquery"
 	telegraph "github.com/beerhall/telegraph-go"
@@ -51,7 +54,12 @@ func main() {
 
 		doc.Find("img").Each(func(i int, s *goquery.Selection) {
 			data_src, _ := s.Attr("data-src")
-			s.SetAttr("src", data_src)
+			filename := fmt.Sprintf("%x", sha512.Sum512([]byte(data_src)))[0:12]
+			cmd := exec.Command("curl", "-o", "/var/www/html/img/"+filename, data_src)
+			log.Printf("Running command and waiting for it to finish...")
+			cmd.Run()
+			s.SetAttr("src", "http://108.61.162.7/img/"+filename)
+			log.Println(filename)
 		})
 
 		title, _ := doc.Find("#activity-name").First().Html()
