@@ -2,9 +2,9 @@
 Convert Wechat articles to Telegraph articles.
 
 ## Dependencies
-- [go-telegram-bot-api/telegram-bot-api](https://github.com/go-telegram-bot-api/telegram-bot-api)
-- [meinside/telegraph-go](https://github.com/meinside/telegraph-go)
-- [spf13/viper](https://github.com/spf13/viper)
+- [go-telegram-bot-api/telegram-bot-api](https://github.com/go-telegram-bot-api/telegram-bot-api) - Golang bindings for the Telegram Bot API
+- [meinside/telegraph-go](https://github.com/meinside/telegraph-go) - Go library for Telegraph API
+- [spf13/viper](https://github.com/spf13/viper) - Go configuration with fangs
 
 ## Contributing
 Please read [Code of Conduct](CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
