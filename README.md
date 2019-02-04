@@ -12,5 +12,9 @@ Please read [Code of Conduct](CODE_OF_CONDUCT.md) for details on our code of con
 ## Versioning
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/beerhall/wechat2telegraph/tags). 
 
+## Authors
+* **BeerHall** - *Initial work* - [BeerHall](https://github.com/beerhall)
+See also the list of [contributors](https://github.com/beerhall/wechat2telegraph/contributors) who participated in this project.
+
 ## License
 This project is licensed under the MIT License - see the [License](LICENSE.md) file for details
