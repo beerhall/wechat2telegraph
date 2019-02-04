@@ -9,19 +9,32 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	telegraph "github.com/beerhall/telegraph-go"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/spf13/viper"
 
 	"log"
 )
 
 func main() {
-	token := "771387478:AAFb_szalVh_LekBLDZRdXeuBlFSfn_ytFc"
+	viper.SetConfigName("config")    // name of config file (without extension)
+	viper.AddConfigPath("./config/") // path to look for the config file in
+	err := viper.ReadInConfig()      // Find and read the config file
+	if err != nil {                  // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+
+	token := viper.Get("token")
+	address := viper.Get("address")
+	port := viper.Get("port")
+	certFile := viper.Get("certFile")
+	keyFile := viper.Get("keyFile")
+
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		log.Panic(err)
 	}
 	bot.Debug = true
 
-	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://108.61.162.7:8443/"+bot.Token, "/root/wechat2telegraph/wechat2telegraph.pem"))
+	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://"+address":"+port+"/"+bot.Token,certFile))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,7 +46,7 @@ func main() {
 		log.Printf("Telegram callback failed: %s", info.LastErrorMessage)
 	}
 	updates := bot.ListenForWebhook("/" + bot.Token)
-	go http.ListenAndServeTLS("0.0.0.0:8443", "/root/wechat2telegraph/wechat2telegraph.pem", "/root/wechat2telegraph/wechat2telegraph.key", nil)
+	go http.ListenAndServeTLS("0.0.0.0:"+port, certFile,keyFile, nil)
 
 	for update := range updates {
 		// Request the HTML page.
