@@ -14,6 +14,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 * **BeerHall** - *Initial work* - [BeerHall](https://github.com/beerhall)
+
 See also the list of [contributors](https://github.com/beerhall/wechat2telegraph/contributors) who participated in this project.
 
 ## License
