@@ -22,11 +22,11 @@ func main() {
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 
-	token := viper.Get("token")
-	address := viper.Get("address")
-	port := viper.Get("port")
-	certFile := viper.Get("certFile")
-	keyFile := viper.Get("keyFile")
+	token := viper.Get("token").(string)
+	address := viper.Get("address").(string)
+	port := viper.Get("port").(string)
+	certFile := viper.Get("certFile").(string)
+	keyFile := viper.Get("keyFile").(string)
 
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
@@ -34,7 +34,7 @@ func main() {
 	}
 	bot.Debug = true
 
-	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://"+address":"+port+"/"+bot.Token,certFile))
+	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://"+address+":"+port+"/"+bot.Token, certFile))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func main() {
 		log.Printf("Telegram callback failed: %s", info.LastErrorMessage)
 	}
 	updates := bot.ListenForWebhook("/" + bot.Token)
-	go http.ListenAndServeTLS("0.0.0.0:"+port, certFile,keyFile, nil)
+	go http.ListenAndServeTLS("0.0.0.0:"+port, certFile, keyFile, nil)
 
 	for update := range updates {
 		// Request the HTML page.
