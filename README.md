@@ -6,5 +6,8 @@ Convert Wechat articles to Telegraph articles.
 - [meinside/telegraph-go](https://github.com/meinside/telegraph-go)
 - [spf13/viper](https://github.com/spf13/viper)
 
+## Contributing
+Please read [Code of Conduct](CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
 ## License
-[MIT License](https://github.com/beerhall/wechat2telegraph/blob/master/LICENSE)
+This project is licensed under the MIT License - see the [License](LICENSE.md) file for details
