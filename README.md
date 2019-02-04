@@ -9,5 +9,8 @@ Convert Wechat articles to Telegraph articles.
 ## Contributing
 Please read [Code of Conduct](CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
+## Versioning
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/beerhall/wechat2telegraph/tags). 
+
 ## License
 This project is licensed under the MIT License - see the [License](LICENSE.md) file for details
