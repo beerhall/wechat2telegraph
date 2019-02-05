@@ -1,9 +1,0 @@
-{
-    "address":"example.com",
-    "port":"8443",
-    "token":"bot<token>",
-    "cert_file": "example.com.pem",
-    "key_file": "example.com.key",
-	"website_folder":"/var/www/html",
-	"image_folder":"/img"
-}
