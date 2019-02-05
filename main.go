@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"time"
 
 	_ "image/gif"
 	_ "image/jpeg"
@@ -77,17 +76,17 @@ func main() {
 
 		doc.Find("img").Each(func(i int, s *goquery.Selection) {
 			data_src, _ := s.Attr("data-src")
-			filename := fmt.Sprintf("%x", sha512.Sum512([]byte(data_src+time.Now().String())))[0:12]
+			filename := fmt.Sprintf("%x", sha512.Sum512([]byte(data_src)))[0:12]
 
 			cmd := exec.Command("curl", "-o", websiteFolder+imageFolder+filename, data_src)
 			log.Println("Running command and waiting for it to finish...")
 			cmd.Run()
 
-			f, _ := os.Open("/var/www/html/img/" + filename)
+			f, _ := os.Open(websiteFolder + imageFolder + filename)
 			r := bufio.NewReader(f)
 			_, format, _ := image.DecodeConfig(r)
 
-			cmd = exec.Command("mv", websiteFolder+imageFolder++filename, websiteFolder+imageFolder++filename+"."+format)
+			os.Rename(websiteFolder+imageFolder+filename, websiteFolder+imageFolder+filename+"."+format)
 			log.Println("Running command and waiting for it to finish...")
 			cmd.Run()
 
