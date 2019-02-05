@@ -1,10 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"crypto/sha512"
 	"fmt"
+	"image"
 	"net/http"
+	"os"
 	"os/exec"
+	"time"
+
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 
 	"github.com/PuerkitoBio/goquery"
 	telegraph "github.com/beerhall/telegraph-go"
@@ -15,18 +23,20 @@ import (
 )
 
 func main() {
-	viper.SetConfigName("config")    // name of config file (without extension)
-	viper.AddConfigPath("./config/") // path to look for the config file in
-	err := viper.ReadInConfig()      // Find and read the config file
-	if err != nil {                  // Handle errors reading the config file
+	viper.SetConfigName("config")     // name of config file (without extension)
+	viper.AddConfigPath("./configs/") // path to look for the config file in
+	err := viper.ReadInConfig()       // Find and read the config file
+	if err != nil {                   // Handle errors reading the config file
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 
 	token := viper.Get("token").(string)
 	address := viper.Get("address").(string)
 	port := viper.Get("port").(string)
-	certFile := viper.Get("certFile").(string)
-	keyFile := viper.Get("keyFile").(string)
+	certFile := viper.Get("cert_file").(string)
+	keyFile := viper.Get("key_file").(string)
+	websiteFolder := viper.Get("website_folder").(string)
+	imageFolder := viper.Get("image_folder").(string)
 
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
@@ -67,19 +77,27 @@ func main() {
 
 		doc.Find("img").Each(func(i int, s *goquery.Selection) {
 			data_src, _ := s.Attr("data-src")
-			filename := fmt.Sprintf("%x", sha512.Sum512([]byte(data_src)))[0:12]
-			cmd := exec.Command("curl", "-o", "/var/www/html/img/"+filename, data_src)
-			log.Printf("Running command and waiting for it to finish...")
+			filename := fmt.Sprintf("%x", sha512.Sum512([]byte(data_src+time.Now().String())))[0:12]
+
+			cmd := exec.Command("curl", "-o", websiteFolder+imageFolder+filename, data_src)
+			log.Println("Running command and waiting for it to finish...")
 			cmd.Run()
-			s.SetAttr("src", "http://108.61.162.7/img/"+filename)
-			log.Println(filename)
+
+			f, _ := os.Open("/var/www/html/img/" + filename)
+			r := bufio.NewReader(f)
+			_, format, _ := image.DecodeConfig(r)
+
+			cmd = exec.Command("mv", websiteFolder+imageFolder++filename, websiteFolder+imageFolder++filename+"."+format)
+			log.Println("Running command and waiting for it to finish...")
+			cmd.Run()
+
+			s.SetAttr("src", "https://"+address+"/"+imageFolder+filename+"."+format)
+			log.Println("filename:\t" + filename + "." + format)
 		})
 
 		title, _ := doc.Find("#activity-name").First().Html()
 		author, _ := doc.Find("#js_name").First().Html()
 		html, _ := doc.Find("#js_content").First().Html()
-
-		log.Printf(html)
 
 		if client, err := telegraph.Create(author, author, ""); err == nil {
 			log.Printf("> Created client: %#+v", client)
