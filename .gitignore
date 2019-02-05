@@ -12,4 +12,5 @@
 *.out
 *.pem
 *.key
-configs/config - 副本.json
+configs/config.json
+configs/config.json
